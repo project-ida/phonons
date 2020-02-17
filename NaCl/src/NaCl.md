@@ -153,6 +153,9 @@ phonon.plot_thermal_properties().show()
 
 ```python
 # PDOS
+# Partial Density Of States: is determined as a contribution from the given atom to the total phonon DOS. 
+# This is a useful concept that allows one to understand the nature of various branches in the phonon spectrum.
+
 phonon.run_mesh(mesh=[10, 10, 10],
                 is_mesh_symmetry=False,
                 with_eigenvectors=True)
