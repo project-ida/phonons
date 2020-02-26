@@ -27,6 +27,8 @@ Later in the notebook I run Quantum Espresso (QE) for the first time on my mac.
 ```python
 from IPython.display import Image
 import numpy as np
+%matplotlib inline
+import matplotlib.pyplot as plt
 ```
 
 ## [3 Molecules](http://kitchingroup.cheme.cmu.edu/dft-book/dft.html#orgheadline10)
@@ -172,6 +174,19 @@ I need to install QE on Mac. [YouTube tutorial here](https://www.youtube.com/wat
 - Navigated into `QE` and as per [instructions](https://github.com/QEF/q-e/tree/qe-6.5#usage) on QE repo I ran `./configure` and then `make all` - this took about 15 mins to complete
 
 ```python
+
+from ase import Atoms
+from ase.calculators.espresso import Espresso
+
+atoms = Atoms('H2', positions=[[0, 0, -1], [0, 0, 1]])
+
+
+pseudo_dir = "~/QE/SSSP_precision_pseudos/"
+
+H2 = 
+```
+
+```python
 from ase.build import bulk
 from ase.calculators.espresso import Espresso
 from ase.constraints import UnitCellFilter
@@ -208,26 +223,99 @@ print(rocksalt.get_forces())
 **MATT: I'd like to be able to translate the code below (from dft book) into QE code like above**
 
 ```python
+
+```
+
+```python
+import nglview # https://github.com/arose/nglview/issues/845#issuecomment-524523545
+from ase.visualize import view
+view(CO,viewer='ngl')
+```
+
+```python
 from ase import Atoms, Atom
-from vasp import Vasp
+from ase.calculators.espresso import Espresso
 
-co = Atoms([Atom('C', [0, 0, 0]),
+pseudopotentials = {'C': 'C.pbe-n-kjpaw_psl.1.0.0.UPF',
+                    'O': 'O.pbe-n-kjpaw_psl.0.1.UPF'}
+
+CO = Atoms([Atom('C', [0, 0, 0]),
             Atom('O', [1.2, 0, 0])],
-           cell=(6., 6., 6.))
+           cell=(20., 20., 20.))
 
-calc = Vasp('simple-co',  # output dir
-            xc='pbe',  # the exchange-correlation functional
-            nbands=6,    # number of bands
-            encut=350,    # planewave cutoff
-            ismear=1,    # Methfessel-Paxton smearing
-            sigma=0.01,  # very small smearing factor for a molecule
-            atoms=co)
+calc = Espresso(label="CO", pseudo_dir = "/Users/matt/QE/SSSP_precision_pseudos/", pseudopotentials=pseudopotentials, pw=400 , # Plane wave cutoff
+                dw=4000, # Density wave cutoff
+                kpts=(1,1,1), # (rather sparse) k-point (Brillouin) sampling
+                xc='RPBE', #Exchange-correlation functional
+                dipole={'status':True}, # Includes dipole correction (necessary for asymmetric slabs)
+        prefix="CO")
 
-print('energy = {0} eV'.format(co.get_potential_energy()))
-print(co.get_forces())
+
+# calc = Vasp('molecules/simple-co',  # output dir
+#             xc='pbe',  # the exchange-correlation functional
+#             nbands=6,    # number of bands
+#             encut=350,    # planewave cutoff
+#             ismear=1,    # Methfessel-Paxton smearing
+#             sigma=0.01,  # very small smearing factor for a molecule
+#             atoms=co)
+
+
+# calc =  Espresso(pseudo_dir = "/Users/matt/QE/SSSP_precision_pseudos/", pseudopotentials=pseudopotentials,
+#                  calculation="relax", conv_thr=1e-8, ion_dynamics="bfgs", prefix="CO", kpts=(1, 1, 1), ecutwfc=30.0, ibrav=1)
+
+CO.calc = calc
+
+print('energy = {0} eV'.format(CO.get_potential_energy()))
+print(CO.get_forces())
+```
+
+```python
+CO.get_positions()
 ```
 
 **MATT: I'd like to also play with code from these stanford people https://suncat.stanford.edu/wiki**
+
+
+Raman https://wiki.fysik.dtu.dk/ase/ase/vibrations/raman.html?highlight=raman
+
+Phonons
+
+```python
+from ase import Atoms, Atom
+from ase.calculators.espresso import Espresso
+
+pseudopotentials = {'H': 'H_ONCV_PBE-1.0.oncvpsp.upf'}
+
+H2 = Atoms([Atom('H', [0, 0, 0]),
+            Atom('H', [1, 0, 0])],
+           cell=(10., 10., 10.))
+
+calc =  Espresso(pseudo_dir = "/Users/matt/QE/SSSP_precision_pseudos/", pseudopotentials=pseudopotentials,
+                 calculation="relax", conv_thr=1e-8, ion_dynamics="bfgs", prefix="H2", kpts=(1, 1, 1), ecutwfc=30.0, ibrav=1)
+
+
+H2.calc = calc
+
+print('energy = {0} eV'.format(H2.get_potential_energy()))
+```
+
+```python
+H2.get_positions()
+```
+
+```python
+# https://wiki.fysik.dtu.dk/ase/ase/atoms.html#working-with-the-array-methods-of-atoms-objects
+
+
+```
+
+```python
+from ase.dft.dos import DOS
+dos = DOS(calc)
+plt.plot(dos.get_energies(), dos.get_dos())
+plt.xlabel('Energy - $E_f$ (eV)')
+plt.ylabel('DOS')
+```
 
 ```python
 
