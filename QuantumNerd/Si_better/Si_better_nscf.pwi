@@ -1,0 +1,32 @@
+&CONTROL
+   calculation      = 'nscf'
+   outdir           = './Si_better'
+   prefix           = 'Si_better'
+   pseudo_dir       = '/Users/matt/QE/SSSP_precision_pseudos/'
+/
+&SYSTEM
+   ibrav            = 2
+   ecutwfc          = 50.0
+   occupations      = 'tetrahedra'
+   ntyp             = 1
+   nat              = 2
+   celldm(1)        = 10.357409975650365
+/
+&ELECTRONS
+   conv_thr         = 1e-08
+/
+&IONS
+/
+&CELL
+/
+
+ATOMIC_SPECIES
+Si 28.085 Si.pbe-n-rrkjus_psl.1.0.0.UPF
+
+K_POINTS automatic
+12 12 12  0 0 0
+
+ATOMIC_POSITIONS angstrom
+Si 0.0000000000 0.0000000000 0.0000000000 
+Si 1.3702263242 1.3702263242 1.3702263242 
+

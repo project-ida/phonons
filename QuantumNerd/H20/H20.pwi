@@ -1,0 +1,35 @@
+&CONTROL
+   calculation      = 'relax'
+   outdir           = './H20'
+   prefix           = 'H20'
+   etot_conv_thr    = 1e-05
+   forc_conv_thr    = 0.0001
+   pseudo_dir       = '/Users/matt/QE/SSSP_precision_pseudos/'
+/
+&SYSTEM
+   ibrav            = 1
+   ecutwfc          = 25.0
+   ntyp             = 2
+   nat              = 3
+   celldm(1)        = 10.000000041768613
+/
+&ELECTRONS
+   conv_thr         = 1e-08
+/
+&IONS
+   ion_dynamics     = 'bfgs'
+/
+&CELL
+/
+
+ATOMIC_SPECIES
+H 1.008 H_ONCV_PBE-1.0.oncvpsp.upf
+O 15.999 O.pbe-n-kjpaw_psl.0.1.UPF
+
+K_POINTS gamma
+
+ATOMIC_POSITIONS angstrom
+H 1.0000000000 0.0100000000 0.0300000000 
+H -1.0000000000 0.0100000000 0.0200000000 
+O 0.0000000000 0.0000000000 0.0000000000 
+

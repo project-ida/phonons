@@ -1,0 +1,31 @@
+&CONTROL
+   calculation      = 'relax'
+   outdir           = './H2'
+   prefix           = 'H2'
+   pseudo_dir       = '/Users/matt/QE/SSSP_precision_pseudos/'
+/
+&SYSTEM
+   ibrav            = 1
+   ecutwfc          = 30.0
+   ntyp             = 1
+   nat              = 2
+   celldm(1)        = 20.000000083537227
+/
+&ELECTRONS
+   conv_thr         = 1e-08
+/
+&IONS
+   ion_dynamics     = 'bfgs'
+/
+&CELL
+/
+
+ATOMIC_SPECIES
+H 1.008 H_ONCV_PBE-1.0.oncvpsp.upf
+
+K_POINTS gamma
+
+ATOMIC_POSITIONS angstrom
+H 0.0000000000 0.0000000000 0.0000000000 
+H 1.0000000000 0.0000000000 0.0000000000 
+
